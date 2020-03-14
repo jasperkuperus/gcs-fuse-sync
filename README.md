@@ -106,11 +106,15 @@ Now, test it out:
 kubectl get pod
 kubectl exec -it <pod-name> --container gcs-fuse-sync /bin/sh
 kubectl exec -it <pod-name> --container hello-world /bin/sh
+
+# Run in both containers:
 cd /bucket-share
 ls -al
 echo wow2 > hi.txt
 cat hi.txt
 ```
+
+The contents will be in sync. Also have a look at GCP, `hi.txt` will be there!
 
 ## References
 
