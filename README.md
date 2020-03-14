@@ -4,6 +4,8 @@ This docker image allows you to mount a Google Cloud Storage bucket and keep tha
 
 **WARNING**: This implementation only loads the data from GCS the first time. All changes you do locally are synced back to GCS, but changes coming from GCS won't be picked up.
 
+**WARNING**: Use this at your own risk. Due to faulty usage, you could overwrite contents in your GCS bucket. Always make a backup of your bucket before deploying this.
+
 ## Background
 
 Google Cloud Storage buckets can not be easily mounted in Kubernetes Pods. There are some solutions floating around with [postStart and preStop hooks](https://github.com/maciekrb/gcs-fuse-sample). But before you can use that, you will need the [gcsfuse](https://cloud.google.com/storage/docs/gcs-fuse) installed in your container. If you want to mount a volume to a 3rd party container, this is not possible unless you're willing to create your own container.
