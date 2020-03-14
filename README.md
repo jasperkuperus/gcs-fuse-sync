@@ -2,8 +2,6 @@
 
 This docker image allows you to mount a Google Cloud Storage bucket and keep that in sync with a local directory. This directory is exposed as a volume, so that other containers within the same Kubernetes Pod can easily read and write to the bucket, using the sidecar as a proxy.
 
-**WARNING**: This implementation only loads the data from GCS the first time. All changes you do locally are synced back to GCS, but changes coming from GCS won't be picked up.
-
 **WARNING**: Use this at your own risk. Due to faulty usage, you could overwrite contents in your GCS bucket. Always make a backup of your bucket before deploying this.
 
 ## Background
@@ -17,6 +15,8 @@ This image solves this solution by synchronising the mounted GCS bucket to a loc
 Why not simply mount a disk? A disk can only be mounted by 1 node. If your container runs on multiple nodes (e.g. as `DaemonSet`, or just multiple replicas over multiple nodes), only the first node will be able to mount that disk.
 
 ## Usage
+
+The `unison` tool is used to keep everything in sync. Using a file watcher does not work, given that the fuse mount is not a regular folder. Therefore a polling mechanism is used. By default, polling happens every 10 seconds. You can modify this by overriding the environment variable `POLL_INTERVAL`.
 
 ### Simple Test
 
@@ -41,7 +41,7 @@ $ echo wow > /bucket-share/hi.txt
 $ cat /gcs-mount/hi.txt
 ```
 
-Check out your bucket in the GCP console, it'll have this `hi.txt` file!
+Give it around 10 seconds, then check out your bucket in the GCP console, it'll have this `hi.txt` file! Note that you can mosify this 10 seconds interval.
 
 The `/gcs-mount` folder is the actual `gcsfuse` mount folder. This folder is synced with the normal folder `/bucket-share`.
 
@@ -114,7 +114,17 @@ $ echo wow2 > hi.txt
 $ cat hi.txt
 ```
 
-The contents will be in sync. Also have a look at GCP, `hi.txt` will be there!
+Give it around 10 seconds and the contents will be in sync. Also have a look at GCP, `hi.txt` will be there! Note that you can modify this 10 seconds interval.
+
+## Configuration
+
+Configuration is done through environment variables. You can use the following:
+
+| Variable | Default | Doc |
+| --- | --- | --- |
+| KEY_FILE | `''` | Path to your service account for the GCS bucket |
+| GCS_BUCKET | `''` | Name of the bucket you want to sync (without `gc://`) |
+| POLL_INTERVAL | `10` | The interval in seconds for synchronising contents |
 
 ## References
 
