@@ -23,7 +23,7 @@ Why not simply mount a disk? A disk can only be mounted by 1 node. If your conta
 In order to do a quick check whether this works, you could do this:
 
 ```sh
-docker run -it --privileged \
+$ docker run -it --privileged \
   -v /path/to/your/key.json:/vol/key.json \
   -e GCS_BUCKET=your-bucket-name \
   -e KEY_FILE=/vol/key.json \
@@ -33,12 +33,12 @@ docker run -it --privileged \
 The container is now running and actively keeping the bucket in sync with a local folder. You can connect with this container and play around to see the sync works:
 
 ```sh
-docker ps
-docker exec -it <container-id> /bin/sh
-ls -al /gcs-mount
-ls -al /bucket-share
-echo wow > /bucket-share/hi.txt
-cat /gcs-mount/hi.txt
+$ docker ps
+$ docker exec -it <container-id> /bin/sh
+$ ls -al /gcs-mount
+$ ls -al /bucket-share
+$ echo wow > /bucket-share/hi.txt
+$ cat /gcs-mount/hi.txt
 ```
 
 Check out your bucket in the GCP console, it'll have this `hi.txt` file!
@@ -103,15 +103,15 @@ spec:
 Now, test it out:
 
 ```sh
-kubectl get pod
-kubectl exec -it <pod-name> --container gcs-fuse-sync /bin/sh
-kubectl exec -it <pod-name> --container hello-world /bin/sh
+$ kubectl get pod
+$ kubectl exec -it <pod-name> --container gcs-fuse-sync /bin/sh
+$ kubectl exec -it <pod-name> --container hello-world /bin/sh
 
 # Run in both containers:
-cd /bucket-share
-ls -al
-echo wow2 > hi.txt
-cat hi.txt
+$ cd /bucket-share
+$ ls -al
+$ echo wow2 > hi.txt
+$ cat hi.txt
 ```
 
 The contents will be in sync. Also have a look at GCP, `hi.txt` will be there!
