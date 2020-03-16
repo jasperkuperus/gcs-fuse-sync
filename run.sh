@@ -5,4 +5,4 @@ then
 fi
 
 gcsfuse --key-file ${KEY_FILE} ${GCS_BUCKET} /gcs-mount
-unison -repeat $POLL_INTERVAL -batch /gcs-mount /bucket-share
+unison -repeat $POLL_INTERVAL -prefer newer -batch -copyonconflict /gcs-mount /bucket-share

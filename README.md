@@ -128,6 +128,10 @@ Configuration is done through environment variables. You can use the following:
 | GCS_BUCKET | `''` | Name of the bucket you want to sync (without `gc://`) |
 | POLL_INTERVAL | `10` | The interval in seconds for synchronising contents |
 
+## Conflicts
+
+When there are conflics with keeping the folders in sync, copies of the conflict are saved in the folder and the newest file is taken as leading.
+
 ## References
 
 * [blue1st/docker-gcsfuse](https://github.com/blue1st/docker-gcsfuse)
